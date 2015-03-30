@@ -252,23 +252,24 @@ class Examples extends CI_Controller {
         public function usuarios(){
             try{
                 $crud = new grocery_CRUD();
-            $crud->set_table('usuarios');
-            $crud->columns('usuario','contraseña');
-            $crud->set_subject('usuarios');
-            $crud->required_fields('usuario', 'contraseña');
+                $crud->set_theme('datatables');
+                    $crud->set_table('usuarios');
+                    $crud->columns('id_usuario', 'usuario','contrasena');
+                    $crud->set_subject('usuarios');
 
-            $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-            $output = $crud->render();
-		if($crud->getState() != 'list') {
 
-			$this->_example_output($output);
-		} else {
-			return $output;
-		}
-             
-             }catch(Exception $e){
-                        show_error($e->getMessage().' --- '.$e->getTraceAsString());
-                }
+                    $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
+                    $output = $crud->render();
+                        if($crud->getState() != 'list') {
+
+                                $this->_example_output($output);
+                        } else {
+                                return $output;
+                        }
+
+                    }catch(Exception $e){
+                               show_error($e->getMessage().' --- '.$e->getTraceAsString());
+                       }
      
         }
         
@@ -306,8 +307,9 @@ class Examples extends CI_Controller {
             try{
                 	$crud = new grocery_CRUD();
 		 
-            		 // $crud->set_theme('datatables');
+                                   $crud->set_theme('datatables');
 			            $crud->set_table('asistencia_general');
+                                  
 			            $crud->columns('id_alumno','id_clase','cant_febrero','cant_marzo', 'cant_abril','cant_mayo','cant_junio','cant_julio','cant_agosto','cant_septiembre','cant_octubre','cant_noviembre','cant_diciembre','cantidad_clases','cantidad_ausencia','porcentaje_asistencia');
 			             
 			            $crud->set_rules('cant_febrero','FEB','numeric');
@@ -350,16 +352,11 @@ class Examples extends CI_Controller {
         
 
 						$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-
+                                                    $crud->set_theme('datatables');
 						$output = $crud->render();
 
 						if($crud->getState() != 'list') {
-						//		 $this->load->view('v_tabla.php');
-				// $this->load->view('v_clases1.php');
-        // $this->load->view('row-fluid.php',$output);
-         // $this->load->view('v_final.php'); 
-
-							//$this->_example_output($output);
+				
 						} else {
 							return $output;
 						}
@@ -578,7 +575,7 @@ class Examples extends CI_Controller {
             try{
                 $crud = new grocery_CRUD();
 		 
-                    //$crud->set_theme('datatables');
+                    $crud->set_theme('datatables');
                     $crud->set_table('cuenta_detalle');
                     $crud->columns('id_cuenta','nro_comprobante', 'concepto_detalle', 'debito_detalle', 'credito_detalle','saldo_detalle' ,'fecha_detalle'  );
 
@@ -785,7 +782,7 @@ class Examples extends CI_Controller {
 
 		$js_files = $output1->js_files;
 		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
+		$output = "<h1> Asistencia General </h1>".$output1->output;
 
 
 		$this->_example_output6((object)array(
@@ -810,7 +807,7 @@ class Examples extends CI_Controller {
 
 		$js_files = $output1->js_files;
 		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
+		$output = "<h1>Asistencia Ideal</h1>".$output1->output;
 
 
 		$this->_example_output66((object)array(
@@ -830,7 +827,7 @@ class Examples extends CI_Controller {
 		$output1 = $this->examenes();
 		$js_files = $output1->js_files;
 		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
+		$output = "<h1> Examenes </h1>".$output1->output;
 
 		$this->_example_output7((object)array(
 				'js_files' => $js_files,
@@ -868,7 +865,7 @@ class Examples extends CI_Controller {
 		$output1 = $this->usuarios();
 		$js_files = $output1->js_files;
 		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
+		$output = "<h1> Usuarios </h1>".$output1->output;
 
 		$this->_example_output9((object)array(
 				'js_files' => $js_files,
@@ -932,7 +929,7 @@ class Examples extends CI_Controller {
 
 		$js_files = $output1->js_files + $output2->js_files;
 		$css_files = $output1->css_files + $output2->css_files;
-		$output = "<h1>List 1</h1>".$output1->output."<h1>List 2</h1>".$output2->output;
+		$output = "<h1> Cuentas de Alumnos </h1>".$output1->output."<h1>List 2</h1>".$output2->output;
 
 		
 
