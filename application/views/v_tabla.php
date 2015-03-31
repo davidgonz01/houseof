@@ -351,7 +351,7 @@
 					</li>
                                         
                                         <li>
-						<a href='<?php echo site_url('examples/v_asistencias_ideal_smultigrids')?>' class="dropdown-toggle">
+						<a href='<?php echo site_url('c_asistencia_general/v_asistencias_ideal_smultigrids')?>' class="dropdown-toggle">
 								<i class="icon-text-width"></i>
 							<span class="menu-text"> Asistencia Ideal  </span>
 						</a>
@@ -464,7 +464,7 @@
 							</li>
 
 							<li>
-								<a href='<?php echo site_url('examples/v_examenesmultigrids')?>' class="dropdown-toggle">
+								<a href='<?php echo site_url('c_examenes/v_examenes_global_multigrids')?>' class="dropdown-toggle">
 									<i class="icon-double-angle-right"></i>
 									Global
 								</a>
