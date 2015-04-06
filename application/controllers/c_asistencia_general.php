@@ -10,6 +10,8 @@ class C_asistencia_general extends CI_Controller {
 		$this->load->helper('url');
 		$this->load->library('grocery_CRUD');
                 $this->load->model('m_asistencia_general');
+                $this->load->model('m_cuenta');
+                
 	}
 
 	public function _example_output($output = null)
@@ -93,6 +95,14 @@ class C_asistencia_general extends CI_Controller {
          $this->load->view('row-fluid.php',$output);
           $this->load->view('v_final.php'); 
 	}
+        
+           public function _example_output20($output = null)
+	{
+          $this->load->view('v_tabla.php');
+	  $this->load->view('v_clases1.php');
+         $this->load->view('row-fluid.php',$output);
+          $this->load->view('v_final.php'); 
+	}
             public function _example_output66($output = null)
 	{
           $this->load->view('v_tabla.php');
@@ -164,6 +174,13 @@ class C_asistencia_general extends CI_Controller {
                           
 	}
 
+         public function v_cuentamultigrids_personalizado()
+	{
+               	
+		
+                 $this->cuentamultigrids_personalizado();
+                          
+	}
 
 	public function offices()
 	{
@@ -175,6 +192,30 @@ class C_asistencia_general extends CI_Controller {
 	public function index()
 	{
 		  $this->alumnosmultigrids();
+
+	}
+          function asistenciasmultigrids()
+	{
+		$this->config->load('grocery_crud');
+		$this->config->set_item('grocery_crud_dialog_forms',true);
+		$this->config->set_item('grocery_crud_default_per_page',10);
+
+		$output1 = $this->asistencia();
+
+		//$output3 = $this->employees_management2();
+
+		//$output3 = $this->customers_management2();
+
+		$js_files = $output1->js_files;
+		$css_files = $output1->css_files;
+		$output = "<h1> Asistencia General </h1>".$output1->output;
+
+
+		$this->_example_output6((object)array(
+				'js_files' => $js_files,
+				'css_files' => $css_files,
+				'output'	=> $output
+		));
 
 	}
 
@@ -346,13 +387,17 @@ class C_asistencia_general extends CI_Controller {
            
 				            $crud->set_subject('asisencia_general');
 				            $crud->required_fields('febrero');
-				            $crud->set_relation('id_alumno','alumnos','{nombre}');
+				            $crud->set_relation('id_alumno','alumnos','{nombre} {apellido}');
 				            $crud->set_relation('id_clase','clases','{descripcion_clase}');
-        
-
+                                                $crud->field_type('cantidad_ausencia','invisible');
+                                                $crud->field_type('cantidad_clases','invisible');
+                                                $crud->field_type('porcentaje_asistencia','invisible');
                                             
 						$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-                                                 $crud->callback_after_insert(array($this, 'log_user_after_insert'));
+                                                $crud->callback_before_insert(array($this,'checking_post_code'));
+                                                $crud->callback_before_update(array($this,'checking_post_code'));
+                                                $crud->callback_after_insert(array($this, 'log_user_after_insert'));
+                                                $crud->callback_after_update(array($this, 'log_user_after_insert'));
                                             
 						$output = $crud->render();
                                                 
@@ -369,8 +414,22 @@ class C_asistencia_general extends CI_Controller {
      
         }
         
-        
-        
+                function checking_post_code($post_array)
+                {
+                    //if(empty($post_array['cantidad_clases']))
+                    //{
+                        $post_array['cantidad_clases'] = $post_array['cant_febrero'] + $post_array['cant_marzo']+ $post_array['cant_abril'] + $post_array['cant_mayo']+ $post_array['cant_junio'] + $post_array['cant_julio'] + $post_array['cant_agosto'] + $post_array['cant_septiembre'] + $post_array['cant_octubre'] + $post_array['cant_noviembre'] + $post_array['cant_diciembre'];
+                   // }
+                    return $post_array;
+                }
+                
+                function checking_precio_hora($post_array)
+                {
+
+                        $post_array['debito'] = $post_array['cant_horas'] * $post_array['precio_hora'];
+
+                    return $post_array;
+                }
         
          public function examenes(){
             try{
@@ -391,7 +450,7 @@ class C_asistencia_general extends CI_Controller {
               
             $crud->set_subject('examenes');
             $crud->required_fields('r_w');
-            $crud->set_relation('id_alumno','alumnos','{nombre}');
+            $crud->set_relation('id_alumno','alumnos','{nombre} {apellido}');
            $crud->set_relation('id_etapa','etapas','{descripcion_etapa}');
             $crud->set_relation('id_clase','clases','{descripcion_clase}');
         
@@ -432,7 +491,7 @@ class C_asistencia_general extends CI_Controller {
               
             $crud->set_subject('examenes');
             $crud->required_fields('r_w');
-            $crud->set_relation('id_alumno','alumnos','{nombre}');
+            $crud->set_relation('id_alumno','alumnos','{nombre} {apellido}');
            $crud->set_relation('id_etapa','etapas','{descripcion_etapa}');
             $crud->set_relation('id_clase','clases','{descripcion_clase}');
         
@@ -460,6 +519,7 @@ class C_asistencia_general extends CI_Controller {
                 $crud = new grocery_CRUD();
 		 
                    
+                    $crud->set_theme('datatables');
                     $crud->set_table('cuenta');
                     $crud->columns('id_cuenta','id_alumno', 'id_tutor', 'debito_cuenta', 'credito_cuenta','saldo_cuenta' );
 
@@ -478,7 +538,7 @@ class C_asistencia_general extends CI_Controller {
 						$crud->unset_edit();
 						
 
-                         $crud->set_relation('id_alumno','alumnos','{nombre}');
+                         $crud->set_relation('id_alumno','alumnos','{nombre} {apellido}');
                        $crud->set_subject('cuenta');
 
                         $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
@@ -504,9 +564,9 @@ class C_asistencia_general extends CI_Controller {
             try{
                 $crud = new grocery_CRUD();
 		 
-                    //$crud->set_theme('datatables');
+                    $crud->set_theme('datatables');
                     $crud->set_table('cuenta_detalle');
-                    $crud->columns('id_cuenta','nro_comprobante', 'concepto_detalle', 'debito_detalle', 'credito_detalle','saldo_detalle' ,'fecha_detalle'  );
+                    $crud->columns('id_cuenta_detalle','id_cuenta','nro_comprobante', 'concepto_detalle', 'debito_detalle', 'credito_detalle','saldo_detalle' ,'fecha_detalle'  );
 
 
                       $crud->set_rules('debito_detalle','debito','numeric');
@@ -515,14 +575,71 @@ class C_asistencia_general extends CI_Controller {
 
 
                        $crud->display_as('debito_detalle','Debito');
+                       
                        $crud->display_as('credito_detalle','Credito');
                        $crud->display_as('saldo_detalle','Saldo');
                        
-                           $crud->set_relation('id_cuenta','cuenta','{id_cuenta}');
+                        $crud->set_relation('id_cuenta','cuenta','{id_cuenta}');
+                        $crud->field_type('saldo_detalle','invisible');
                        $crud->set_subject('cuenta_detalle');
 
                         $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
+                       
+                       
+                         $crud->callback_after_update(array($this, 'log_user_after_insert_cuenta_regular'));
+                         $crud->callback_after_insert(array($this, 'log_user_after_insert_cuenta_regular'));
+                        
+                        
+                        
+		$output = $crud->render();
 
+		if($crud->getState() != 'list') {
+			$this->_example_output($output);
+		} else {
+			return $output;
+		}
+             
+             }catch(Exception $e){
+                        show_error($e->getMessage().' --- '.$e->getTraceAsString());
+                }
+     
+        }
+        
+        
+         public function cuentadetalle_personalizado(){
+            try{
+                $crud = new grocery_CRUD();
+		 
+                    $crud->set_theme('datatables');
+                    $crud->set_table('cuenta_detalle_personalizado');
+                    $crud->columns('id_cuenta', 'id_clase','cant_horas','precio_hora', 'debito', 'credito','saldo' ,'fecha' ,'nro_comprobante' );
+
+
+                      $crud->set_rules('debito','debito','numeric');
+                      $crud->set_rules('credito','credito','numeric');
+                      $crud->set_rules('saldo','saldo','numeric');
+
+                      $crud->display_as('cant_hora','cant');
+                       $crud->display_as('debito_detalle','Debito');
+                       $crud->display_as('credito_detalle','Credito');
+                       $crud->display_as('saldo_detalle','Saldo');
+                       
+                           
+                           $crud->set_relation('id_clase','clases','{descripcion_clase}');
+                           $crud->set_relation('id_cuenta','cuenta','{id_cuenta}');
+                           $crud->edit_fields('id_cuenta', 'id_clase','cant_horas','precio_hora', 'credito' ,'nro_comprobante');
+                       $crud->set_subject('cuenta_detalle_personalizado');
+
+                        $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
+                        
+                        $crud->callback_before_insert(array($this,'checking_precio_hora'));
+                        $crud->callback_before_update(array($this,'checking_precio_hora'));
+                      
+                         $crud->callback_after_insert(array($this, 'log_user_after_insert_cuenta_personalizado'));
+                         
+                         $crud->callback_after_update(array($this, 'log_user_after_insert_cuenta_personalizado'));
+                        
+                        
 		$output = $crud->render();
 
 		if($crud->getState() != 'list') {
@@ -545,183 +662,9 @@ class C_asistencia_general extends CI_Controller {
         }
         
 
-	public function employees_management()
-	{
-			$crud = new grocery_CRUD();
+	
+	
 
-			$crud->set_theme('datatables');
-			$crud->set_table('employees');
-			$crud->set_relation('officeCode','offices','city');
-			$crud->display_as('officeCode','Office City');
-			$crud->set_subject('Employee');
-
-			$crud->required_fields('lastName');
-
-			$crud->set_field_upload('file_url','assets/uploads/files');
-
-			$output = $crud->render();
-
-			$this->_example_output($output);
-	}
-
-	public function customers_management()
-	{
-			$crud = new grocery_CRUD();
-
-			$crud->set_table('customers');
-			$crud->columns('customerName','contactLastName','phone','city','country','salesRepEmployeeNumber','creditLimit');
-			$crud->display_as('salesRepEmployeeNumber','from Employeer')
-				 ->display_as('customerName','Name')
-				 ->display_as('contactLastName','Last Name');
-			$crud->set_subject('Customer');
-			$crud->set_relation('salesRepEmployeeNumber','employees','lastName');
-
-			$output = $crud->render();
-
-			$this->_example_output($output);
-	}
-
-	public function orders_management()
-	{
-			$crud = new grocery_CRUD();
-
-			$crud->set_relation('customerNumber','customers','{contactLastName} {contactFirstName}');
-			$crud->display_as('customerNumber','Customer');
-			$crud->set_table('orders');
-			$crud->set_subject('Order');
-			$crud->unset_add();
-			$crud->unset_delete();
-
-			$output = $crud->render();
-
-			$this->_example_output($output);
-	}
-
-	public function products_management()
-	{
-			$crud = new grocery_CRUD();
-
-			$crud->set_table('products');
-			$crud->set_subject('Product');
-			$crud->unset_columns('productDescription');
-			$crud->callback_column('buyPrice',array($this,'valueToEuro'));
-
-			$output = $crud->render();
-
-			$this->_example_output($output);
-	}
-
-	public function valueToEuro($value, $row)
-	{
-		return $value.' &euro;';
-	}
-
-	public function film_management()
-	{
-		$crud = new grocery_CRUD();
-
-		$crud->set_table('film');
-		$crud->set_relation_n_n('actors', 'film_actor', 'actor', 'film_id', 'actor_id', 'fullname','priority');
-		$crud->set_relation_n_n('category', 'film_category', 'category', 'film_id', 'category_id', 'name');
-		$crud->unset_columns('special_features','description','actors');
-
-		$crud->fields('title', 'description', 'actors' ,  'category' ,'release_year', 'rental_duration', 'rental_rate', 'length', 'replacement_cost', 'rating', 'special_features');
-
-		$output = $crud->render();
-
-		$this->_example_output($output);
-	}
-
-	public function film_management_twitter_bootstrap()
-	{
-		try{
-			$crud = new grocery_CRUD();
-
-			$crud->set_theme('twitter-bootstrap');
-			$crud->set_table('film');
-			$crud->set_relation_n_n('actors', 'film_actor', 'actor', 'film_id', 'actor_id', 'fullname','priority');
-			$crud->set_relation_n_n('category', 'film_category', 'category', 'film_id', 'category_id', 'name');
-			$crud->unset_columns('special_features','description','actors');
-
-			$crud->fields('title', 'description', 'actors' ,  'category' ,'release_year', 'rental_duration', 'rental_rate', 'length', 'replacement_cost', 'rating', 'special_features');
-
-			$output = $crud->render();
-			$this->_example_output($output);
-
-		}catch(Exception $e){
-			show_error($e->getMessage().' --- '.$e->getTraceAsString());
-		}
-	}
-
-	function multigrids()
-	{
-		$this->config->load('grocery_crud');
-		$this->config->set_item('grocery_crud_dialog_forms',true);
-		$this->config->set_item('grocery_crud_default_per_page',10);
-
-		$output1 = $this->alumnos();
-
-		//$output3 = $this->employees_management2();
-
-		//$output3 = $this->customers_management2();
-
-		$js_files = $output1->js_files;
-		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
-
-		$this->_example_output((object)array(
-				'js_files' => $js_files,
-				'css_files' => $css_files,
-				'output'	=> $output
-		));
-	}
-
-        
-        
-        function clasesmultigrids()
-	{
-		$this->config->load('grocery_crud');
-		$this->config->set_item('grocery_crud_dialog_forms',true);
-		$this->config->set_item('grocery_crud_default_per_page',10);
-
-		$output1 = $this->clases();
-		$js_files = $output1->js_files;
-		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
-
-		$this->_example_output2((object)array(
-				'js_files' => $js_files,
-				'css_files' => $css_files,
-				'output'	=> $output
-		));
-	}
-        
-          
-        function asistenciasmultigrids()
-	{
-		$this->config->load('grocery_crud');
-		$this->config->set_item('grocery_crud_dialog_forms',true);
-		$this->config->set_item('grocery_crud_default_per_page',10);
-
-		$output1 = $this->asistencia();
-
-		//$output3 = $this->employees_management2();
-
-		//$output3 = $this->customers_management2();
-
-		$js_files = $output1->js_files;
-		$css_files = $output1->css_files;
-		$output = "<h1> Asistencia General </h1>".$output1->output;
-
-
-		$this->_example_output6((object)array(
-				'js_files' => $js_files,
-				'css_files' => $css_files,
-				'output'	=> $output
-		));
-
-	}
-        
          function examenesmultigrids()
 	{
 		$this->config->load('grocery_crud');
@@ -731,7 +674,7 @@ class C_asistencia_general extends CI_Controller {
 		$output1 = $this->examenes();
 		$js_files = $output1->js_files;
 		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
+		$output = "<h1> Examenes </h1>".$output1->output;
 
 		$this->_example_output7((object)array(
 				'js_files' => $js_files,
@@ -751,7 +694,7 @@ class C_asistencia_general extends CI_Controller {
 		$output1 = $this->alumnos();
 		$js_files = $output1->js_files;
 		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
+		$output = "<h1> Alumnos</h1>".$output1->output;
 
 		$this->_example_output11((object)array(
 				'js_files' => $js_files,
@@ -769,7 +712,7 @@ class C_asistencia_general extends CI_Controller {
 		$output1 = $this->usuarios();
 		$js_files = $output1->js_files;
 		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
+		$output = "<h1> Usuarios </h1>".$output1->output;
 
 		$this->_example_output9((object)array(
 				'js_files' => $js_files,
@@ -777,48 +720,9 @@ class C_asistencia_general extends CI_Controller {
 				'output'	=> $output
 		));
 	}
-	public function offices_management2()
-	{
-		$crud = new grocery_CRUD();
-		$crud->set_table('offices');
-		$crud->set_subject('Office');
+	
 
-		$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-
-		$output = $crud->render();
-
-		if($crud->getState() != 'list') {
-			$this->_example_output($output);
-		} else {
-			return $output;
-		}
-	}
-
-	public function employees_management2()
-	{
-		$crud = new grocery_CRUD();
-
-		$crud->set_theme('datatables');
-		$crud->set_table('employees');
-		$crud->set_relation('officeCode','offices','city');
-		$crud->display_as('officeCode','Office City');
-		$crud->set_subject('Employee');
-                
-                
-		$crud->required_fields('lastName');
-
-		$crud->set_field_upload('file_url','assets/uploads/files');
-
-		$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-
-		$output = $crud->render();
-
-		if($crud->getState() != 'list') {
-			$this->_example_output($output);
-		} else {
-			return $output;
-		}
-	}
+	
         
         
         
@@ -834,7 +738,30 @@ class C_asistencia_general extends CI_Controller {
 
 		$js_files = $output1->js_files + $output2->js_files;
 		$css_files = $output1->css_files + $output2->css_files;
-		$output = "<h1>List 1</h1>".$output1->output."<h1>List 2</h1>".$output2->output;
+		$output = "<h1>Cuenta por Alumnos</h1>".$output1->output."<h1> Detalles de las cuentas </h1>".$output2->output;
+
+		
+
+		$this->_example_output8((object)array(
+				'js_files' => $js_files,
+				'css_files' => $css_files,
+				'output'	=> $output
+		));
+	}
+        
+         function cuentamultigrids_personalizado()
+	{
+		$this->config->load('grocery_crud');
+		$this->config->set_item('grocery_crud_dialog_forms',true);
+		$this->config->set_item('grocery_crud_default_per_page',10);
+
+		$output1 = $this->cuenta();
+
+		$output2 = $this->cuentadetalle_personalizado();
+
+		$js_files = $output1->js_files + $output2->js_files;
+		$css_files = $output1->css_files + $output2->css_files;
+		$output = "<h1>Cuentas de Alumnos Personalizados </h1>".$output1->output."<h1> Detalles de la Cuenta</h1>".$output2->output;
 
 		
 
@@ -846,29 +773,7 @@ class C_asistencia_general extends CI_Controller {
 	}
         
         
-	public function customers_management2()
-	{
-
-		$crud = new grocery_CRUD();
-
-		$crud->set_table('customers');
-		$crud->columns('customerName','contactLastName','phone','city','country','salesRepEmployeeNumber','creditLimit');
-		$crud->display_as('salesRepEmployeeNumber','from Employeer')
-			 ->display_as('customerName','Name')
-			 ->display_as('contactLastName','Last Name');
-		$crud->set_subject('Customer');
-		$crud->set_relation('salesRepEmployeeNumber','employees','lastName');
-
-		$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-
-		$output = $crud->render();
-
-		if($crud->getState() != 'list') {
-			$this->_example_output($output);
-		} else {
-			return $output;
-		}
-	}
+	
         
           
         public function asistencias_ideal(){
@@ -906,21 +811,24 @@ class C_asistencia_general extends CI_Controller {
 	                      ->display_as('cant_septiembre','SEP')
 	                      ->display_as('cant_octubre','OCT')
 	                      ->display_as('cant_noviembre','NOV')
-	                      ->display_as('cant_diciembre','DEC')
-	                      ->display_as('cantidad_clases','Total');
+	                      ->display_as('cant_diciembre','DEC');
+	                      
 	                     
                         
 						
            
 				            $crud->set_subject('asisencias_ideal');
+                                            $crud->field_type('cantidad_clases','invisible');
 				            $crud->required_fields('febrero');
-				            
+				            // $crud->edit_fields('id_clase','cant_febrero','cant_marzo', 'cant_abril','cant_mayo','cant_junio','cant_julio','cant_agosto','cant_septiembre','cant_octubre','cant_noviembre','cant_diciembre');
 				            $crud->set_relation('id_clase','clases','{descripcion_clase}');
         
 
 						$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-                                                $crud->callback_after_insert(array($this, 'log_user_after_insert2'));
-                                                $crud->callback_after_update(array($this, 'log_user_after_insert2'));
+                                                $crud->callback_before_insert(array($this,'checking_post_code'));
+                                                $crud->callback_before_update(array($this,'checking_post_code'));
+                                                
+                                                
 						$output = $crud->render();
 
 						if($crud->getState() != 'list') {
@@ -972,7 +880,7 @@ class C_asistencia_general extends CI_Controller {
 {
      
      
-        $this->m_asistencia_general->actualizardatos($primary_key);
+      //  $this->m_asistencia_general->actualizardatos($primary_key);
         $this->m_asistencia_general->actualizardatos_completo();
             return true;
 }
@@ -984,7 +892,23 @@ class C_asistencia_general extends CI_Controller {
         $this->m_asistencia_general->actualizardatos_ideal();
             return true;
 }
-        
+ 
+ function log_user_after_insert_cuenta_personalizado($post_array,$primary_key)
+{
+     
+     
+        $this->m_cuenta->actualizardatos_cuenta($primary_key);
+            return true;
+}
+
+ function log_user_after_insert_cuenta_regular($post_array,$primary_key)
+{
+     
+     
+        $this->m_cuenta->actualizardatos_cuenta_regular($primary_key);
+            return true;
+}
+   
         
         
 

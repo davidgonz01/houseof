@@ -374,7 +374,8 @@
 							</li>
 
 							<li>
-								<a href="buttons.html">
+                                                            
+								<a href='<?php echo site_url('c_asistencia_general/v_cuentamultigrids_personalizado')?>'>
 									<i class="icon-double-angle-right"></i>
 									Personalizado
 								</a>
@@ -473,7 +474,7 @@
 					</li>
 
 					<li>
-						<a href='<?php echo site_url('examples/v_cuentamultigrids')?>'>
+						<a href='<?php echo site_url('c_asistencia_general/v_cuentamultigrids')?>'>
 							<i class="icon-list-alt"></i>
 							<span class="menu-text"> Cuenta </span>
 						</a>

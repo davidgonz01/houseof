@@ -152,7 +152,48 @@ class C_examenes extends CI_Controller {
               
             $crud->set_subject('examenes');
             $crud->required_fields('r_w');
-            $crud->set_relation('id_alumno','alumnos','{nombre}');
+            $crud->set_relation('id_alumno','alumnos','{nombre} {apellido}');
+           $crud->set_relation('id_etapa','etapas','{descripcion_etapa}');
+            $crud->set_relation('id_clase','clases','{descripcion_clase}');
+        
+            
+		$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
+
+		$output = $crud->render();
+
+		if($crud->getState() != 'list') {
+			$this->_example_output($output);
+		} else {
+			return $output;
+		}
+             
+             }catch(Exception $e){
+                        show_error($e->getMessage().' --- '.$e->getTraceAsString());
+                }
+     
+        }
+        
+        
+         public function examenes_ideal(){
+            try{
+                $crud = new grocery_CRUD();
+		 
+              $crud->set_theme('datatables');
+            $crud->set_table('examenes_ideal');
+            $crud->columns('id_clase','r_w','listening', 'speaking','class_part','nota','fecha_examen','id_etapa');
+          
+            $crud->set_rules('r_w','R_W','numeric');
+             $crud->set_rules('listening','Listening','numeric');
+              $crud->set_rules('speaking','Speaking','numeric');
+              $crud->set_rules('class_part','Class_part','numeric');
+           
+            
+              $crud->display_as('id_etapa','Etapa');
+              $crud->display_as('id_clase','clase');
+              
+            $crud->set_subject('examenes_ieal');
+            $crud->required_fields('r_w');
+            $crud->set_relation('id_alumno','alumnos','{nombre} {apellido}');
            $crud->set_relation('id_etapa','etapas','{descripcion_etapa}');
             $crud->set_relation('id_clase','clases','{descripcion_clase}');
         
@@ -180,7 +221,7 @@ class C_examenes extends CI_Controller {
 		 
               $crud->set_theme('datatables');
             $crud->set_table('examenes_global');
-            $crud->columns('id_alumno','id_clase','r_w','listening', 'speaking','class_part', 'global_logro', 'nota','fecha_examen','id_etapa');
+            $crud->columns('id_clase','r_w','listening', 'speaking','class_part', 'global_logro', 'id_nota');
           
             $crud->set_rules('r_w','R_W','numeric');
              $crud->set_rules('listening','Listening','numeric');
@@ -188,16 +229,19 @@ class C_examenes extends CI_Controller {
               $crud->set_rules('class_part','Class_part','numeric');
               $crud->set_rules('global_logro','global_logro','numeric');
             
-              $crud->display_as('id_etapa','Etapa');
-              $crud->display_as('id_clase','clase');
+              
+              $crud->display_as('id_clase','clase'); 
+              $crud->display_as('id_nota','Notas');
               
             $crud->set_subject('examenes_global');
             $crud->required_fields('r_w');
-            $crud->set_relation('id_alumno','alumnos','{nombre}');
-           $crud->set_relation('id_etapa','etapas','{descripcion_etapa}');
+            $crud->set_relation('id_alumno','alumnos','{nombre} {apellido}');
+           
             $crud->set_relation('id_clase','clases','{descripcion_clase}');
-        
-            
+             $crud->set_relation('id_nota','notas','{descripcion_nota}');
+            $crud->unset_add();
+            $crud->unset_edit();
+            $crud->unset_delete();
 		$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
 
 		$output = $crud->render();
@@ -316,8 +360,9 @@ class C_examenes extends CI_Controller {
         
 
 						$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
+                                                 $crud->callback_after_update(array($this, 'log_user_after_insert2'));
                                                 $crud->callback_after_insert(array($this, 'log_user_after_insert2'));
-                                                $crud->callback_after_update(array($this, 'log_user_after_insert2'));
+                                               
 						$output = $crud->render();
 
 						if($crud->getState() != 'list') {

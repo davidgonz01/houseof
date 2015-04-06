@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Examples extends CI_Controller {
-
+ public $variable_filtro;
 	public function __construct()
 	{
 		parent::__construct();
@@ -151,7 +151,8 @@ class Examples extends CI_Controller {
         
          public function v_usuariosmultigrids()
 	{			
-                 $this->usuariosmultigrids();          
+               //  $this->usuariosmultigrids();   
+              $this->load->view('v_login.php');
 	}
 
 	 public function v_cuentamultigrids()
@@ -254,7 +255,7 @@ class Examples extends CI_Controller {
                 $crud = new grocery_CRUD();
                 $crud->set_theme('datatables');
                     $crud->set_table('usuarios');
-                    $crud->columns('id_usuario', 'usuario','contrasena');
+                    $crud->columns('id', 'usuario','password');
                     $crud->set_subject('usuarios');
 
 
@@ -352,7 +353,7 @@ class Examples extends CI_Controller {
         
 
 						$crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-                                                    $crud->set_theme('datatables');
+                                                   
 						$output = $crud->render();
 
 						if($crud->getState() != 'list') {
@@ -448,7 +449,7 @@ class Examples extends CI_Controller {
 		 
               $crud->set_theme('datatables');
             $crud->set_table('examenes');
-            $crud->columns('id_alumno','id_clase','r_w','listening', 'speaking','class_part','id_nota','fecha_examen','id_etapa');
+            $crud->columns('id_alumno','id_clase','r_w','listening', 'speaking','class_part','fecha_examen','id_etapa');
           
             $crud->set_rules('r_w','R_W','numeric');
              $crud->set_rules('listening','Listening','numeric');
@@ -459,6 +460,8 @@ class Examples extends CI_Controller {
               $crud->display_as('id_etapa','Etapa');
               $crud->display_as('id_clase','clase');
               $crud->display_as('id_nota','Nota');
+              
+              
               
             $crud->set_subject('examenes');
             $crud->required_fields('r_w');
@@ -530,7 +533,7 @@ class Examples extends CI_Controller {
             try{
                 $crud = new grocery_CRUD();
 		 
-                   
+                   $crud->set_theme('datatables');
                     $crud->set_table('cuenta');
                     $crud->columns('id_cuenta','id_alumno', 'id_tutor', 'debito_cuenta', 'credito_cuenta','saldo_cuenta' );
 
@@ -545,15 +548,16 @@ class Examples extends CI_Controller {
                        $crud->display_as('saldo_cuenta','Saldo');
                        
                        $crud->unset_add();
-						$crud->unset_delete();
-						$crud->unset_edit();
+                        $crud->unset_delete();
+			$crud->unset_edit();
 						
 
                          $crud->set_relation('id_alumno','alumnos','{nombre}');
                        $crud->set_subject('cuenta');
 
                         $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-
+                      // $crud->add_action('select', '', '','ui-icon-image',array($this,'just_a_test'));
+                        
 		$output = $crud->render();
 
 		if($crud->getState() != 'list') {
@@ -577,6 +581,7 @@ class Examples extends CI_Controller {
 		 
                     $crud->set_theme('datatables');
                     $crud->set_table('cuenta_detalle');
+                  //  $crud->where('id_cuenta_detalle', '2');
                     $crud->columns('id_cuenta','nro_comprobante', 'concepto_detalle', 'debito_detalle', 'credito_detalle','saldo_detalle' ,'fecha_detalle'  );
 
 
@@ -589,11 +594,16 @@ class Examples extends CI_Controller {
                        $crud->display_as('credito_detalle','Credito');
                        $crud->display_as('saldo_detalle','Saldo');
                        
-                           $crud->set_relation('id_cuenta','cuenta','{id_cuenta}');
+                          // $crud->set_relation('id_cuenta','cuenta','{id_cuenta}');
+                      //     $crud->or_where('id_cuenta','2');
                        $crud->set_subject('cuenta_detalle');
 
                         $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
-
+                        
+                        
+                         
+                        
+                        
 		$output = $crud->render();
 
 		if($crud->getState() != 'list') {
@@ -610,145 +620,64 @@ class Examples extends CI_Controller {
         
         
         
+        
+        
+         public function cuentadetalle_parametros($numero_cuenta){
+            try{
+                $crud = new grocery_CRUD();
+                    
+                    $crud->set_theme('datatables');
+                    $crud->set_table('cuenta_detalle');
+                    $crud->where('id_cuenta', '2');
+                    //$crud->where($parametro, 'id_alumno');
+                    $crud->columns('id_cuenta','nro_comprobante', 'concepto_detalle', 'debito_detalle', 'credito_detalle','saldo_detalle' ,'fecha_detalle'  );
+
+
+                      $crud->set_rules('debito_detalle','debito','numeric');
+                      $crud->set_rules('credito_detalle','credito','numeric');
+                      $crud->set_rules('saldo_detalle','saldo','numeric');
+
+
+                       $crud->display_as('debito_detalle','Debito');
+                       $crud->display_as('credito_detalle','Credito');
+                       $crud->display_as('saldo_detalle','Saldo');
+                       
+                           //$crud->set_relation('id_cuenta','cuenta','{id_cuenta}');
+                       $crud->set_subject('cuenta_detalle');
+
+                        $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
+                        
+                        
+                         
+                        
+                        
+		$output = $crud->render();
+
+		if($crud->getState() != 'list') {
+			$this->_example_output($output);
+		} else {
+			return $output;
+		}
+             
+             }catch(Exception $e){
+                        show_error($e->getMessage().' --- '.$e->getTraceAsString());
+                }
+     
+        }
+        
+         function just_a_test($primary_key , $row)
+        {
+           // return $row->id_alumno;
+           //$this->cuentadetalle_parametros($row);
+          // $this->cuentamultigrids_select($row);
+        }
+        
         function add_field_callback_2()
         {
                 return '<input type="text" maxlength="50" value=""  minlength="4">';
         }
         
 
-	public function employees_management()
-	{
-			$crud = new grocery_CRUD();
-
-			$crud->set_theme('datatables');
-			$crud->set_table('employees');
-			$crud->set_relation('officeCode','offices','city');
-			$crud->display_as('officeCode','Office City');
-			$crud->set_subject('Employee');
-
-			$crud->required_fields('lastName');
-
-			$crud->set_field_upload('file_url','assets/uploads/files');
-
-			$output = $crud->render();
-
-			$this->_example_output($output);
-	}
-
-	public function customers_management()
-	{
-			$crud = new grocery_CRUD();
-
-			$crud->set_table('customers');
-			$crud->columns('customerName','contactLastName','phone','city','country','salesRepEmployeeNumber','creditLimit');
-			$crud->display_as('salesRepEmployeeNumber','from Employeer')
-				 ->display_as('customerName','Name')
-				 ->display_as('contactLastName','Last Name');
-			$crud->set_subject('Customer');
-			$crud->set_relation('salesRepEmployeeNumber','employees','lastName');
-
-			$output = $crud->render();
-
-			$this->_example_output($output);
-	}
-
-	public function orders_management()
-	{
-			$crud = new grocery_CRUD();
-
-			$crud->set_relation('customerNumber','customers','{contactLastName} {contactFirstName}');
-			$crud->display_as('customerNumber','Customer');
-			$crud->set_table('orders');
-			$crud->set_subject('Order');
-			$crud->unset_add();
-			$crud->unset_delete();
-
-			$output = $crud->render();
-
-			$this->_example_output($output);
-	}
-
-	public function products_management()
-	{
-			$crud = new grocery_CRUD();
-
-			$crud->set_table('products');
-			$crud->set_subject('Product');
-			$crud->unset_columns('productDescription');
-			$crud->callback_column('buyPrice',array($this,'valueToEuro'));
-
-			$output = $crud->render();
-
-			$this->_example_output($output);
-	}
-
-	public function valueToEuro($value, $row)
-	{
-		return $value.' &euro;';
-	}
-
-	public function film_management()
-	{
-		$crud = new grocery_CRUD();
-
-		$crud->set_table('film');
-		$crud->set_relation_n_n('actors', 'film_actor', 'actor', 'film_id', 'actor_id', 'fullname','priority');
-		$crud->set_relation_n_n('category', 'film_category', 'category', 'film_id', 'category_id', 'name');
-		$crud->unset_columns('special_features','description','actors');
-
-		$crud->fields('title', 'description', 'actors' ,  'category' ,'release_year', 'rental_duration', 'rental_rate', 'length', 'replacement_cost', 'rating', 'special_features');
-
-		$output = $crud->render();
-
-		$this->_example_output($output);
-	}
-
-	public function film_management_twitter_bootstrap()
-	{
-		try{
-			$crud = new grocery_CRUD();
-
-			$crud->set_theme('twitter-bootstrap');
-			$crud->set_table('film');
-			$crud->set_relation_n_n('actors', 'film_actor', 'actor', 'film_id', 'actor_id', 'fullname','priority');
-			$crud->set_relation_n_n('category', 'film_category', 'category', 'film_id', 'category_id', 'name');
-			$crud->unset_columns('special_features','description','actors');
-
-			$crud->fields('title', 'description', 'actors' ,  'category' ,'release_year', 'rental_duration', 'rental_rate', 'length', 'replacement_cost', 'rating', 'special_features');
-
-			$output = $crud->render();
-			$this->_example_output($output);
-
-		}catch(Exception $e){
-			show_error($e->getMessage().' --- '.$e->getTraceAsString());
-		}
-	}
-
-	function multigrids()
-	{
-		$this->config->load('grocery_crud');
-		$this->config->set_item('grocery_crud_dialog_forms',true);
-		$this->config->set_item('grocery_crud_default_per_page',10);
-
-		$output1 = $this->alumnos();
-
-		//$output3 = $this->employees_management2();
-
-		//$output3 = $this->customers_management2();
-
-		$js_files = $output1->js_files;
-		$css_files = $output1->css_files;
-		$output = "<h1>List 1</h1>".$output1->output;
-
-		$this->_example_output((object)array(
-				'js_files' => $js_files,
-				'css_files' => $css_files,
-				'output'	=> $output
-		));
-	}
-
-        
-        
         function clasesmultigrids()
 	{
 		$this->config->load('grocery_crud');
@@ -940,6 +869,29 @@ class Examples extends CI_Controller {
 		));
 	}
         
+        
+         function cuentamultigrids_select($numero_cuenta)
+	{
+		$this->config->load('grocery_crud');
+		$this->config->set_item('grocery_crud_dialog_forms',true);
+		$this->config->set_item('grocery_crud_default_per_page',10);
+
+		$output1 = $this->cuenta();
+
+		$output2 = $this->cuentadetalle_parametros($numero_cuenta);
+
+		$js_files = $output1->js_files + $output2->js_files;
+		$css_files = $output1->css_files + $output2->css_files;
+		$output = "<h1> Cuentas de Alumnos </h1>".$output1->output."<h1>List 2</h1>".$output2->output;
+
+		
+
+		$this->_example_output8((object)array(
+				'js_files' => $js_files,
+				'css_files' => $css_files,
+				'output'	=> $output
+		));
+	}
         
 	public function customers_management2()
 	{
