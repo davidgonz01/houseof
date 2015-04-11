@@ -200,15 +200,18 @@ class C_asistencia_general extends CI_Controller {
 		$this->config->set_item('grocery_crud_dialog_forms',true);
 		$this->config->set_item('grocery_crud_default_per_page',10);
 
-		$output1 = $this->asistencia();
+		
+                $output1 = $this->asistencias_ideal();
+		$output2 = $this->asistencia();
 
-		//$output3 = $this->employees_management2();
-
-		//$output3 = $this->customers_management2();
-
-		$js_files = $output1->js_files;
+		/**$js_files = $output1->js_files;
 		$css_files = $output1->css_files;
-		$output = "<h1> Asistencia General </h1>".$output1->output;
+		$output = "<h1> Asistencia General </h1>".$output1->output;*/
+                
+                $js_files = $output1->js_files + $output2->js_files;
+		$css_files = $output1->css_files + $output2->css_files;
+		$output = "<h1> Asistencia Ideal    </h1>".$output1->output."<h1> Asistencia </h1>".$output2->output;
+
 
 
 		$this->_example_output6((object)array(
@@ -430,6 +433,8 @@ class C_asistencia_general extends CI_Controller {
 
                     return $post_array;
                 }
+                
+                
         
          public function examenes(){
             try{
@@ -521,7 +526,7 @@ class C_asistencia_general extends CI_Controller {
                    
                     $crud->set_theme('datatables');
                     $crud->set_table('cuenta');
-                    $crud->columns('id_cuenta','id_alumno', 'id_tutor', 'debito_cuenta', 'credito_cuenta','saldo_cuenta' );
+                    $crud->columns('id_cuenta','id_alumno', 'id_tutor','saldo_cuenta' );
 
 
                       $crud->set_rules('debito_cuenta','debito','numeric');
@@ -529,8 +534,8 @@ class C_asistencia_general extends CI_Controller {
                       $crud->set_rules('saldo_cuenta','saldo','numeric');
 
 
-                       $crud->display_as('debito_cuenta','Debito');
-                       $crud->display_as('credito_cuenta','Credito');
+                       $crud->display_as('id_cuenta','Codigo');
+                   
                        $crud->display_as('saldo_cuenta','Saldo');
                        
                        $crud->unset_add();
@@ -558,7 +563,7 @@ class C_asistencia_general extends CI_Controller {
         }
         
         
-        
+   
         
             public function cuentadetalle(){
             try{
@@ -573,7 +578,7 @@ class C_asistencia_general extends CI_Controller {
                       $crud->set_rules('credito_detalle','credito','numeric');
                       $crud->set_rules('saldo_detalle','saldo','numeric');
 
-
+                       $crud->display_as('id_cuenta','Codigo');
                        $crud->display_as('debito_detalle','Debito');
                        
                        $crud->display_as('credito_detalle','Credito');
@@ -582,12 +587,14 @@ class C_asistencia_general extends CI_Controller {
                         $crud->set_relation('id_cuenta','cuenta','{id_cuenta}');
                         $crud->field_type('saldo_detalle','invisible');
                        $crud->set_subject('cuenta_detalle');
-
+                       $crud->unset_edit();
+                       $crud->unset_delete();
+                         $crud->callback_before_delete(array($this, 'log_user_after_delete_cuenta_regular'));
+                         $crud->callback_after_insert(array($this, 'log_user_after_insert_cuenta_regular'));
+                         
                         $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
                        
                        
-                         $crud->callback_after_update(array($this, 'log_user_after_insert_cuenta_regular'));
-                         $crud->callback_after_insert(array($this, 'log_user_after_insert_cuenta_regular'));
                         
                         
                         
@@ -612,7 +619,7 @@ class C_asistencia_general extends CI_Controller {
 		 
                     $crud->set_theme('datatables');
                     $crud->set_table('cuenta_detalle_personalizado');
-                    $crud->columns('id_cuenta', 'id_clase','cant_horas','precio_hora', 'debito', 'credito','saldo' ,'fecha' ,'nro_comprobante' );
+                    $crud->columns('id_cuenta_detalle_personalizado', 'id_cuenta', 'id_clase','cant_horas','precio_hora', 'debito', 'credito','saldo' ,'fecha' ,'nro_comprobante' );
 
 
                       $crud->set_rules('debito','debito','numeric');
@@ -623,8 +630,10 @@ class C_asistencia_general extends CI_Controller {
                        $crud->display_as('debito_detalle','Debito');
                        $crud->display_as('credito_detalle','Credito');
                        $crud->display_as('saldo_detalle','Saldo');
+                       $crud->display_as('id_cuenta_detalle_personalizado','ID');
                        
-                           
+                         $crud->unset_edit();
+                       $crud->unset_delete();
                            $crud->set_relation('id_clase','clases','{descripcion_clase}');
                            $crud->set_relation('id_cuenta','cuenta','{id_cuenta}');
                            $crud->edit_fields('id_cuenta', 'id_clase','cant_horas','precio_hora', 'credito' ,'nro_comprobante');
@@ -633,11 +642,11 @@ class C_asistencia_general extends CI_Controller {
                         $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
                         
                         $crud->callback_before_insert(array($this,'checking_precio_hora'));
-                        $crud->callback_before_update(array($this,'checking_precio_hora'));
+                        //$crud->callback_before_update(array($this,'checking_precio_hora'));
                       
                          $crud->callback_after_insert(array($this, 'log_user_after_insert_cuenta_personalizado'));
                          
-                         $crud->callback_after_update(array($this, 'log_user_after_insert_cuenta_personalizado'));
+                         //$crud->callback_after_update(array($this, 'log_user_after_insert_cuenta_personalizado'));
                         
                         
 		$output = $crud->render();
@@ -845,6 +854,7 @@ class C_asistencia_general extends CI_Controller {
             	}catch(Exception $e){
                         show_error($e->getMessage().' --- '.$e->getTraceAsString());
              	}
+               // $output = $crud->render();
      
         }
         
@@ -903,12 +913,24 @@ class C_asistencia_general extends CI_Controller {
 
  function log_user_after_insert_cuenta_regular($post_array,$primary_key)
 {
+      
      
      
         $this->m_cuenta->actualizardatos_cuenta_regular($primary_key);
+         
             return true;
 }
-   
+ 
+
+ function log_user_after_delete_cuenta_regular($post_array,$primary_key)
+{
+      
+     
+     
+        $this->m_cuenta->actualizardatos_cuenta_regular($primary_key);
+         
+            return true;
+}
         
         
 

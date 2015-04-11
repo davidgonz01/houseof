@@ -8,13 +8,15 @@ class c_login extends CI_Controller {
 		$this->load->database();
 		$this->load->helper('url');
 		$this->load->library('grocery_CRUD');
-	}
-  function login()
-	{
-             $this->load->helper(array('url', 'form'));
+                $this->load->model('m_login');
+                $this->load->helper(array('url', 'form'));
 		$this->load->helper('form');
                 $this->load->library('session');
                 $this->load->library('form_validation');
+	}
+  function login()
+	{
+             
 		if(!isset($_POST['username'])){	//	Si no recibimos ning�n valor proveniente del formulario, significa que el usuario reci�n ingresa.	
 			$this->load->view('interfaces/v_login_estilo');		//	Por lo tanto le presentamos la pantalla del formulario de ingreso.
 		}
@@ -25,14 +27,14 @@ class c_login extends CI_Controller {
 				$this->load->view('v_login');							//	En caso que no, volvemos a presentar la pantalla de login
 			}
 			else{													//	Si ambos campos fueron correctamente rellanados por el usuario,
-				$this->load->model('m_login');
+				//$this->load->model('m_login');
 				$ExisteUsuarioyPassoword=$this->m_login->ValidarUsuario($_POST['username'],$_POST['password']);	//	comprobamos que el usuario exista en la base de datos y la password ingresada sea correcta
 				if($ExisteUsuarioyPassoword){	// La variable $ExisteUsuarioyPassoword recibe valor TRUE si el usuario existe y FALSE en caso que no. Este valor lo determina el modelo.
 				//	echo "Validacion Ok<br><br><a href=''>Volver</a>";
                                 //			Si el usuario ingres� datos de acceso v�lido, imprimos un mensaje de validaci�n exitosa en pantalla
                                       
                                     
-                                        $data['error']="Nombre de usuario o contraseña incorrecta, por favor vuelva a intentar";
+                                       // $data['error']="Nombre de usuario o contraseña incorrecta1, por favor vuelva a intentar";
                                             // $this->session->set_userdata($datasession);
                                        // $id = intval( $id );
                                         $datoPregunta = intval( $this->m_login->ConsultaId($_POST['username'],$_POST['password']));
@@ -50,7 +52,7 @@ class c_login extends CI_Controller {
                                         
                                 }
 				else{	//	Si no logr� validar
-					$data['error']="Nombre de usuario o contraseña incorrecta, por favor vuelva a intentar";
+					$data['error']="Nombre de usuario o contraseña incorrecta2, por favor vuelva a intentar";
 					$this->load->view('v_login',$data);	//	Lo regresamos a la pantalla de login y pasamos como par�metro el mensaje de error a presentar en pantalla
 				}
 			}

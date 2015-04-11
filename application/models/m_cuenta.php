@@ -15,7 +15,21 @@ class m_cuenta extends CI_Model {
             return array();
         }
     }
-    
+    public function crear_cuenta($primary_key)
+    {
+       
+            $data = array(
+             'id_alumno' => $primary_key,
+             'id_tutor' => 0,
+             'debito_cuenta' => 0,
+             'credito_cuenta' => 0,
+             'saldo_cuenta' => 0
+            );
+            $this->db->insert('cuenta', $data);
+           
+            
+        
+    }
     
     public function getAll() {
         //get all records from users table
@@ -63,7 +77,7 @@ class m_cuenta extends CI_Model {
         */
         $id = intval( $id ); 
            try{
-                    $consulta = "update cuenta cu, cuenta_detalle_personalizado cp set cu.saldo_cuenta =(cu.saldo_cuenta + (cp.debito - cp.credito)), cu.debito_cuenta =  cu.debito_cuenta + cp.debito, cu.credito_cuenta = cu.credito_cuenta + cp.credito, cp.saldo = (cu.saldo_cuenta + (cp.debito - cp.credito)) where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta =  = '$id' LIMIT 1";
+                    $consulta = "update cuenta cu, cuenta_detalle_personalizado cp set cu.saldo_cuenta =(cu.saldo_cuenta + (cp.credito - cp.debito)), cu.debito_cuenta =  cu.debito_cuenta + cp.debito, cu.credito_cuenta = cu.credito_cuenta + cp.credito, cp.saldo = (cu.saldo_cuenta + (cp.credito - cp.debito)) where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta =  = '$id' LIMIT 1";
        
                       $cuenta = $this->db->query($consulta);
                       
@@ -130,7 +144,7 @@ class m_cuenta extends CI_Model {
 set cu.saldo_cuenta =(cu.saldo_cuenta + (cp.debito - cp.credito)), 
 cu.debito_cuenta =  cu.debito_cuenta + cp.debito, 
 cu.credito_cuenta = cu.credito_cuenta + cp.credito,
-cp.saldo = (cu.saldo_cuenta + (cp.debito - cp.credito)) 
+cp.saldo = (cu.saldo_cuenta + (cp.credito - cp.debito)) 
 where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta_detalle_personalizado = '$id' ";
        
                       $cuenta = $this->db->query($consulta);
@@ -154,10 +168,10 @@ where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta_detalle_personalizado = '$id'
         $id = intval( $id ); 
            try{
                     $consulta = "update cuenta cu, cuenta_detalle cp 
-set cu.saldo_cuenta =(cu.saldo_cuenta + (cp.debito_detalle - cp.credito_detalle)), 
+set cu.saldo_cuenta =(cu.saldo_cuenta + (cp.credito_detalle - cp.debito_detalle))* 1, 
 cu.debito_cuenta =  cu.debito_cuenta + cp.debito_detalle, 
 cu.credito_cuenta = cu.credito_cuenta + cp.credito_detalle,
-cp.saldo_detalle = (cu.saldo_cuenta + (cp.debito_detalle - cp.credito_detalle)) 
+cp.saldo_detalle = (cu.saldo_cuenta + (cp.credito_detalle - cp.debito_detalle))* 1 
 where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta_detalle = '$id' ";
        
                       $cuenta = $this->db->query($consulta);
@@ -172,6 +186,29 @@ where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta_detalle = '$id' ";
             }
     } //
     
+    
+     public function actualizardatos_cuenta_regular2($id, $idcuenta) {
+         /*
+        * Any non-digit character will be excluded after passing $id
+        * from intval function. This is done for security reason.
+        */
+        $id = intval( $id ); 
+           try{
+                    $consulta = "update cuenta cu, cuenta_detalle cp 
+set cu.saldo_cuenta =(cu.saldo_cuenta -(cp.credito_detalle - cp.debito_detalle))* 1
+where cu.id_cuenta = 5 And cp.id_cuenta_detalle = '$id' ";
+       
+                      $cuenta = $this->db->query($consulta);
+                      
+                  
+        
+                      
+           }catch ( Exception $e )
+            {
+            $this->load->view('welcome_message');
+              // show_error($e);
+            }
+    } //
     
     
     

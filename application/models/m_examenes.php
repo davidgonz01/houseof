@@ -118,6 +118,35 @@ class m_examenes extends CI_Model {
             }
     } //
     
+    
+    public function crear_examen_global($id_alumno, $id_clase)
+    {
+         try{
+                 
+       
+            $data = array(
+             'id_alumno' => $id_alumno,
+             'id_clase' => $id_clase,
+              'r_w ' => 0,
+              'listening' => 0,
+              'speaking ' => 0,
+              'class_part'=> 0,
+              'global_logro' => 0,
+              'id_nota' => 1,
+              'id_etapa' => 3
+            );
+            $this->db->insert('examenes_global', $data);
+           
+           }catch ( Exception $e )
+            {
+            $this->load->view('welcome_message');
+              // show_error($e);
+            }
+        
+    }
+    
+    
+    
 } //end class
 
 

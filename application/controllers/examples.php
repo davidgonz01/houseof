@@ -9,6 +9,7 @@ class Examples extends CI_Controller {
 		$this->load->database();
 		$this->load->helper('url');
 		$this->load->library('grocery_CRUD');
+                $this->load->model('m_cuenta');
 	}
 
 	public function _example_output($output = null)
@@ -235,6 +236,7 @@ class Examples extends CI_Controller {
            
            
             $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
+             $crud->callback_after_insert(array($this, 'log_user_after_insert_cuenta_crear'));
             $output = $crud->render();
             
 		if($crud->getState() != 'list') {
@@ -249,7 +251,12 @@ class Examples extends CI_Controller {
                 }
 	}
         
-        
+         function log_user_after_insert_cuenta_crear($post_array,$primary_key)
+        {
+     
+             $this->m_cuenta->crear_cuenta($primary_key);
+            return true;
+        }
         public function usuarios(){
             try{
                 $crud = new grocery_CRUD();
@@ -697,30 +704,7 @@ class Examples extends CI_Controller {
 	}
         
           
-        function asistenciasmultigrids()
-	{
-		$this->config->load('grocery_crud');
-		$this->config->set_item('grocery_crud_dialog_forms',true);
-		$this->config->set_item('grocery_crud_default_per_page',10);
-
-		$output1 = $this->asistencia();
-
-		//$output3 = $this->employees_management2();
-
-		//$output3 = $this->customers_management2();
-
-		$js_files = $output1->js_files;
-		$css_files = $output1->css_files;
-		$output = "<h1> Asistencia General </h1>".$output1->output;
-
-
-		$this->_example_output6((object)array(
-				'js_files' => $js_files,
-				'css_files' => $css_files,
-				'output'	=> $output
-		));
-
-	}
+      
         
          function asistencias_ideal_multigrids()
 	{
