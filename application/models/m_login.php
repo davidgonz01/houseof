@@ -3,11 +3,9 @@
 class m_login extends  ci_model {
 	function  ValidarUsuario($email,$password){			//	Consulta Mysql para buscar en la tabla Usuario aquellos usuarios que coincidan con el mail y password ingresados en pantalla de login
 		$query = "SELECT COUNT(*)FROM usuarios WHERE usuario = '$email' and password = '$password' ";
-                     if($query=='0'){
-                        return FALSE;
-                    }else{
-                        return TRUE;
-                    }
+                     
+                        return $query;
+                   
 			
 	}
         

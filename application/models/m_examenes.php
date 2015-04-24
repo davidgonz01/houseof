@@ -17,8 +17,10 @@ class m_examenes extends CI_Model {
     }
     
     
-    public function getAll() {
+    public function modificacion1() {
         //get all records from users table
+        
+                try{
                                 $vista = 'update examenes_global eg, examenes_ideal ei, examenes ex 
                        set
                        eg.r_w = ( ex.r_w * 100 / ei.r_w ) ,
@@ -33,17 +35,49 @@ class m_examenes extends CI_Model {
                        where eg.id_clase = ei.id_clase and
                        eg.id_clase = ex.id_clase and
                        eg.id_alumno = ex.id_alumno AND
-                       ex.id_etapa = 1 ';
+                       ex.id_etapa = 1';
         $query = $this->db->query($vista);
         
-        if( $query->num_rows() > 0 ) {
-            return $query->result();
-        } else {
-            return array();
-        }
+         $query = $this->db->query($vista);
+        
+        
+                    
+           }catch ( Exception $e )
+            {
+            $this->load->view('welcome_message');
+              // show_error($e);
+            }
+       
     } //end getAll
-    
-   
+     public function modificacion2() {
+        try{
+                                $vista =  'update examenes_global eg, examenes_ideal ei, examenes ex 
+                       set
+                       eg.r_w =  (eg.r_w +( ex.r_w * 100 / ei.r_w ))/2,
+                       eg.listening =  (eg.listening + ( ex.listening  * 100 / ei.listening ))/2,
+                       eg.speaking =  (eg.speaking +( ex.speaking * 100 / ei.speaking )) /2,
+                       eg.class_part = (eg.class_part + ( ex.class_part * 100 / ei.class_part ))/2,
+                       eg.global_logro = (eg.global_logro + ( (  ( ex.r_w * 100 / ei.r_w ) + ( ex.listening  * 100 / ei.listening ) +
+                                              ( ex.speaking * 100 / ei.speaking ) +  ( ex.class_part * 100 / ei.class_part )  
+                                           ) / 4))/2
+
+
+                       where eg.id_clase = ei.id_clase and
+                       eg.id_clase = ex.id_clase and
+                       eg.id_alumno = ex.id_alumno AND
+                       ex.id_etapa = 2';
+        $query = $this->db->query($vista);
+        
+        
+                    
+           }catch ( Exception $e )
+            {
+            $this->load->view('welcome_message');
+              // show_error($e);
+            }
+       
+    } //end getAll
+  
     
     public function delete( $id ) {
         /*

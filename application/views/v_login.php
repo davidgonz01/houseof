@@ -66,7 +66,7 @@
                                     <input type="submit" value="Login" /> 
 								</p>
                                                                 <div class="LoginUsuariosError">
-                                                            	<?
+                                                            	<?php
                                                                     if(isset($error)){
                                                                             echo "<p>".$error."</p>";
                                                                     }

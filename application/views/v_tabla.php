@@ -339,23 +339,171 @@
 						<a href='<?php echo site_url('examples/v_clasesmultigrids')?>'>
 					
 							<i class="icon-dashboard"></i>
-							<span class="menu-text"> Clases </span>
-		s				</a>
-					</li>
-
-					<li>
-						<a href='<?php echo site_url('c_asistencia_general/v_asistenciasmultigrids')?>' class="dropdown-toggle">
-								<i class="icon-text-width"></i>
-							<span class="menu-text"> Asistencia </span>
+							<span class="menu-text"> Nuevas Clases </span>
 						</a>
+					</li>
+                                      <li>
+						<a href='<?php echo site_url('c_tutor/v_tutormultigrids')?>'>
+					
+							<i class="icon-dashboard"></i>
+							<span class="menu-text"> tutores </span>
+						</a>
+					</li>
+					<li>
+                                            
+						<a href="#" class="dropdown-toggle">
+							<i class="icon-edit"></i>
+							<span class="menu-text"> Asistencias </span>
+
+							<b class="arrow icon-angle-down"></b>
+						</a>
+
+						<ul class="submenu">
+							<li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids1')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									Kids  Tue & Thu
+
+
+								</a>
+							</li>
+
+							
+
+							<li>
+								<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids2')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 1
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids3')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									Kids 1 Tue & Thu
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids4')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 2
+
+
+								</a>
+							</li>
+                                                        
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids5')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									Kids 3A
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids6')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 3B
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids7')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 3C
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids8')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 4
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids9')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 5
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids10')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									pre teens
+
+
+								</a>
+							</li>
+                                                        
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids11')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									preschool 3
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids12')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									teens 1
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids13')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									teens 2
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids14')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									teens 3
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids15')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									teens 4
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids16')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									young adults 1
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('C_asistencia_general/v_asistenciasmultigrids17')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									young adults 2
+
+
+								</a>
+							</li>
+						</ul>
 					</li>
                                         
-                                        <li>
-						<a href='<?php echo site_url('c_asistencia_general/v_asistencias_ideal_smultigrids')?>' class="dropdown-toggle">
-								<i class="icon-text-width"></i>
-							<span class="menu-text"> Asistencia Ideal  </span>
-						</a>
-					</li>
+                                      
 
 					<li>
 							<a href='<?php echo site_url('examples/v_asistenciasmultigrids')?>' class="dropdown-toggle">
@@ -369,17 +517,11 @@
 							<li>
 									<a href='<?php echo site_url('examples/v_alumnosmultigrids')?>'>
 									<i class="icon-double-angle-right"></i>
-									Regular
+									Nuevo Alumno
 								</a>
 							</li>
 
-							<li>
-                                                            
-								<a href='<?php echo site_url('c_asistencia_general/v_cuentamultigrids_personalizado')?>'>
-									<i class="icon-double-angle-right"></i>
-									Personalizado
-								</a>
-							</li>
+						
 
 							<li>
 								<a href="treeview.html">
@@ -450,34 +592,186 @@
 						</a>
 
 						<ul class="submenu">
-							<li>
-									<a href='<?php echo site_url('examples/v_examenesmultigrids')?>' class="dropdown-toggle">
+                                                    <li>
+									<a href='<?php echo site_url('c_examenes/v_examenes_global_multigrids')?>' class="dropdown-toggle">
 									<i class="icon-double-angle-right"></i>
-									Primera Etapa
+									GLOBAL
+
+
 								</a>
 							</li>
 
 							<li>
-								<a href='<?php echo site_url('examples/v_examenesmultigrids')?>' class="dropdown-toggle">
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids1')?>' class="dropdown-toggle">
 									<i class="icon-double-angle-right"></i>
-									Segunda Etapa
+									Kids  Tue & Thu
+
+
 								</a>
 							</li>
 
+							
+
 							<li>
-								<a href='<?php echo site_url('c_examenes/v_examenes_global_multigrids')?>' class="dropdown-toggle">
+								<a href='<?php echo site_url('c_examenes/v_examenesmultigrids2')?>' class="dropdown-toggle">
 									<i class="icon-double-angle-right"></i>
-									Global
+									kids 1
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids3')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									Kids 1 Tue & Thu
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids4')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 2
+
+
+								</a>
+							</li>
+                                                        
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids5')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									Kids 3A
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids6')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 3B
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids7')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 3C
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids8')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 4
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids9')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									kids 5
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids10')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									pre teens
+
+
+								</a>
+							</li>
+                                                        
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids11')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									preschool 3
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids12')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									teens 1
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids13')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									teens 2
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids14')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									teens 3
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids15')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									teens 4
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids16')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									young adults 1
+
+
+								</a>
+							</li>
+                                                        <li>
+									<a href='<?php echo site_url('c_examenes/v_examenesmultigrids17')?>' class="dropdown-toggle">
+									<i class="icon-double-angle-right"></i>
+									young adults 2
+
+
 								</a>
 							</li>
 						</ul>
 					</li>
+                                        
 
 					<li>
-						<a href='<?php echo site_url('c_asistencia_general/v_cuentamultigrids')?>'>
-							<i class="icon-list-alt"></i>
-							<span class="menu-text"> Cuenta </span>
+                                            
+						<a href="#" class="dropdown-toggle">
+							<i class="icon-edit"></i>
+							<span class="menu-text"> Cuentas </span>
+
+							<b class="arrow icon-angle-down"></b>
 						</a>
+                                            
+                                            <ul class="submenu">
+							<li>                                    
+                                                                                                <a href='<?php echo site_url('c_asistencia_general/v_cuentamultigrids_parametrizado')?>'>
+                                                                                                          <i class="icon-list-alt"></i>
+                                                                                                           <span class="menu-text"> Regular </span>
+                                                                                                </a>
+							</li>
+
+							
+
+							<li>
+								<a href='<?php echo site_url('c_asistencia_general/v_cuentamultigrids_personalizado')?>'>
+									<i class="icon-double-angle-right"></i>
+									Personalizado
+								</a>
+							</li>
+						</ul>
 					</li>
 
 					<li>

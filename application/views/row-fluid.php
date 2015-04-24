@@ -9,19 +9,12 @@ foreach($css_files as $file): ?>
 		
 <div class="row-fluid">
     
-		    <div>
-				<a href='<?php echo site_url('examples/asistenciasmultigrids')?>'>Asistencias</a> |
-				
-			</div>
-		<div style='height:20px;'></div>  
+		   
 						    <div>
 
 								<?php echo $output; ?>
 						    </div>
-         <div>
-
-             <p> datos </p>
-    </div>
+        
     
 							
 						

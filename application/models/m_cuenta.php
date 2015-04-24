@@ -15,6 +15,37 @@ class m_cuenta extends CI_Model {
             return array();
         }
     }
+    
+    function get_areas($term){
+               /** $this->db->where('nombre', $term);
+               
+                $query = $this->db->get('alumnos');
+    return $query->result(); */
+        $buscar = $term;
+    $consulta = "SELECT cl.id_alumno, cl.apellido, cl.nro_documento, cl.telefono, cl.localidad, c.id_cuenta, 
+                cl.nombre AS value FROM cuenta AS c INNER JOIN alumnos AS cl ON c.id_alumno = cl.id_alumno 
+                where nombre like '%$buscar%'";
+            $this->db->query($consulta);
+            $this->db->like('cl.nombre', $buscar); 
+            $query = $this->db->query( $consulta );
+            return $query->result();
+    
+}
+
+
+  function get_cuentas(){
+               /** $this->db->where('nombre', $term);
+               
+                $query = $this->db->get('alumnos');
+    return $query->result(); */
+        $buscar = $term;
+    $consulta = "SELECT c.id_cuenta, cl.nombre, cl.apellido, c.saldo_cuenta FROM cuenta AS c INNER JOIN alumnos AS cl ON c.id_alumno = cl.id_alumno";
+            
+           
+            $query = $this->db->query( $consulta );
+            return $query->result();
+    
+}
     public function crear_cuenta($primary_key)
     {
        
@@ -141,9 +172,8 @@ class m_cuenta extends CI_Model {
         $id = intval( $id ); 
            try{
                     $consulta = "update cuenta cu, cuenta_detalle_personalizado cp 
-set cu.saldo_cuenta =(cu.saldo_cuenta + (cp.debito - cp.credito)), 
-cu.debito_cuenta =  cu.debito_cuenta + cp.debito, 
-cu.credito_cuenta = cu.credito_cuenta + cp.credito,
+set cu.saldo_cuenta =(cu.saldo_cuenta + (cp.credito - cp.debito)), 
+
 cp.saldo = (cu.saldo_cuenta + (cp.credito - cp.debito)) 
 where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta_detalle_personalizado = '$id' ";
        
@@ -187,7 +217,7 @@ where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta_detalle = '$id' ";
     } //
     
     
-     public function actualizardatos_cuenta_regular2($id, $idcuenta) {
+     public function eliminando($id) {
          /*
         * Any non-digit character will be excluded after passing $id
         * from intval function. This is done for security reason.
@@ -195,8 +225,11 @@ where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta_detalle = '$id' ";
         $id = intval( $id ); 
            try{
                     $consulta = "update cuenta cu, cuenta_detalle cp 
-set cu.saldo_cuenta =(cu.saldo_cuenta -(cp.credito_detalle - cp.debito_detalle))* 1
-where cu.id_cuenta = 5 And cp.id_cuenta_detalle = '$id' ";
+set cu.saldo_cuenta =(cu.saldo_cuenta - (cp.credito_detalle - cp.debito_detalle))* 1, 
+cu.debito_cuenta =  cu.debito_cuenta + cp.debito_detalle, 
+cu.credito_cuenta = cu.credito_cuenta + cp.credito_detalle,
+cp.saldo_detalle = (cu.saldo_cuenta + (cp.credito_detalle - cp.debito_detalle))* 1 
+where cp.id_cuenta = cu.id_cuenta and cp.id_cuenta_detalle = '$id'" ;
        
                       $cuenta = $this->db->query($consulta);
                       

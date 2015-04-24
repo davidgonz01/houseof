@@ -218,7 +218,7 @@ class Examples extends CI_Controller {
 		 
               $crud->set_theme('datatables');
             $crud->set_table('alumnos');
-            $crud->columns('nombre','apellido','nro_documento', 'telefono','localidad','fecha_nacimiento','id_tipo_documento','id_pais','id_tipo_alumno');
+            $crud->columns('id_alumno','nombre','apellido','nro_documento', 'telefono','localidad','fecha_nacimiento','id_tipo_documento','id_pais','id_tipo_alumno');
              $crud->unset_columns('telefono','fecha_nacimiento' );
             $crud->set_rules('nro_documento','Nro Documento','numeric');
            
@@ -237,6 +237,7 @@ class Examples extends CI_Controller {
            
             $crud->set_crud_url_path(site_url(strtolower(__CLASS__."/".__FUNCTION__)),site_url(strtolower(__CLASS__."/multigrids")));
              $crud->callback_after_insert(array($this, 'log_user_after_insert_cuenta_crear'));
+             $crud->callback_after_update(array($this, 'log_user_after_insert_cuenta_crear'));
             $output = $crud->render();
             
 		if($crud->getState() != 'list') {
