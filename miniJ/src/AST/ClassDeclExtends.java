@@ -1,4 +1,5 @@
 package AST;
+
 import AST.Visitor.Visitor;
 
 public class ClassDeclExtends extends ClassDecl {
@@ -16,4 +17,5 @@ public class ClassDeclExtends extends ClassDecl {
   public void accept(Visitor v) {
     v.visit(this);
   }
+
 }

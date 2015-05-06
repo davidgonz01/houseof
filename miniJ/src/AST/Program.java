@@ -1,16 +1,10 @@
 package AST;
 import AST.Visitor.Visitor;
 
-public class Program extends ASTNode {
-  public MainClass m;
-  public ClassDeclList cl;
+public abstract class Program extends ASTNode{
+	  public Program(int ln) {
+	    super(ln);
+	  }
+	  public abstract void accept(Visitor v);
+	}
 
-  public Program(MainClass am, ClassDeclList acl, int ln) {
-    super(ln);
-    m=am; cl=acl; 
-  }
-
-  public void accept(Visitor v) {
-    v.visit(this);
-  }
-}

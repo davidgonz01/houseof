@@ -2,12 +2,12 @@ package AST.Visitor;
 
 import AST.*;
 
-// Sample print visitor from MiniJ web site with small modifications for UW CSE.
+// Sample print visitor from MiniJava web site with small modifications for UW CSE.
 // HP 10/11
 
 public class PrettyPrintVisitor implements Visitor {
 
-  // Display added for toy example language.  Not used in regular MiniJ
+  // Display added for toy example language.  Not used in regular MiniJava
   public void visit(Display n) {
     System.out.print("display ");
     n.e.accept(this);
@@ -16,7 +16,7 @@ public class PrettyPrintVisitor implements Visitor {
   
   // MainClass m;
   // ClassDeclList cl;
-  public void visit(Program n) {
+  public void visit(ProgramDeclaration n) {
     n.m.accept(this);
     for ( int i = 0; i < n.cl.size(); i++ ) {
         System.out.println();
@@ -24,25 +24,54 @@ public class PrettyPrintVisitor implements Visitor {
     }
   }
   
+  // MainClass m;
+  // ClassDeclList cl;
+  public void visit(miProgramDeclaration n) {
+    n.m.accept(this);
+    
+  }
+  public void visit(ProgramDeclMain n) {
+	    n.m.accept(this);
+  }
+  
+  public void visit(ProgramDeclClassDeclList n) {
+	    for ( int i = 0; i < n.cl.size(); i++ ) {
+	        System.out.println();
+	        n.cl.get(i).accept(this);
+	    }
+	  }
+  
+  
+  public void visit(ClassDeclEmpty n) {
+	    System.out.print("class ");
+	    n.i.accept(this);
+	    System.out.println(" { ");
+	    System.out.println();
+	    System.out.println("}");
+	  }
   // Identifier i1,i2;
   // Statement s;
-  public void visit(MainClass n) {
+  public void visit(MainClassDeclaration n) {
     System.out.print("class ");
     n.i1.accept(this);
     System.out.println(" {");
     System.out.print("  public static void main (String [] ");
     n.i2.accept(this);
     System.out.println(") {");
-    System.out.print("    ");
+    //System.out.println("    ");
     n.s.accept(this);
     System.out.println("  }");
     System.out.println("}");
   }
+  
+  
+  
+ 
 
   // Identifier i;
   // VarDeclList vl;
   // MethodDeclList ml;
-  public void visit(ClassDeclSimple n) {
+  public void visit(ClassDeclaration n) {
     System.out.print("class ");
     n.i.accept(this);
     System.out.println(" { ");
@@ -58,6 +87,10 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.println();
     System.out.println("}");
   }
+  
+ 
+  
+
  
   // Identifier i;
   // Identifier j;
@@ -82,6 +115,9 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.println("}");
   }
 
+
+  
+
   // Type t;
   // Identifier i;
   public void visit(VarDecl n) {
@@ -97,32 +133,12 @@ public class PrettyPrintVisitor implements Visitor {
   // VarDeclList vl;
   // StatementList sl;
   // Exp e;
-  public void visit(MethodDecl n) {
-    System.out.print("  public ");
-    n.t.accept(this);
-    System.out.print(" ");
-    n.i.accept(this);
-    System.out.print(" (");
-    for ( int i = 0; i < n.fl.size(); i++ ) {
-        n.fl.get(i).accept(this);
-        if (i+1 < n.fl.size()) { System.out.print(", "); }
-    }
-    System.out.println(") { ");
-    for ( int i = 0; i < n.vl.size(); i++ ) {
-        System.out.print("    ");
-        n.vl.get(i).accept(this);
-        System.out.println("");
-    }
-    for ( int i = 0; i < n.sl.size(); i++ ) {
-        System.out.print("    ");
-        n.sl.get(i).accept(this);
-        if ( i < n.sl.size() ) { System.out.println(""); }
-    }
-    System.out.print("    return ");
-    n.e.accept(this);
-    System.out.println(";");
-    System.out.print("  }");
-  }
+
+
+  
+ 
+ 
+ 
 
   // Type t;
   // Identifier i;
@@ -136,6 +152,9 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print("int []");
   }
 
+  public void visit(BooleanType n) {
+    System.out.print("boolean");
+  }
 
   public void visit(IntegerType n) {
     System.out.print("int");
@@ -160,30 +179,41 @@ public class PrettyPrintVisitor implements Visitor {
   // Exp e;
   // Statement s1,s2;
   public void visit(If n) {
-    System.out.print("if (");
+    System.out.print("if");
+    
     n.e.accept(this);
-    System.out.println(") ");
+    System.out.println();
     System.out.print("    ");
+    System.out.print("    ");
+   
     n.s1.accept(this);
     System.out.println();
+   
     System.out.print("    else ");
+    System.out.println();
+    System.out.print("    ");
+    System.out.print("    ");
     n.s2.accept(this);
   }
 
   // Exp e;
   // Statement s;
   public void visit(While n) {
-    System.out.print("while (");
+    System.out.print("while");
     n.e.accept(this);
-    System.out.print(") ");
+    
+    System.out.print("{ ");
+    System.out.print("\n ");
     n.s.accept(this);
+    System.out.print("\n ");
+    System.out.print("    } ");
   }
 
   // Exp e;
   public void visit(Print n) {
-    System.out.print("System.out.println(");
+    System.out.print("  System.out.println(");
     n.e.accept(this);
-    System.out.print(");");
+    System.out.println(");");
   }
   
   // Identifier i;
@@ -214,7 +244,13 @@ public class PrettyPrintVisitor implements Visitor {
     n.e2.accept(this);
     System.out.print(")");
   }
-
+  public void visit(Or n) {
+	    System.out.print("(");
+	    n.e1.accept(this);
+	    System.out.print(" && ");
+	    n.e2.accept(this);
+	    System.out.print(")");
+	  }
   // Exp e1,e2;
   public void visit(LessThan n) {
     System.out.print("(");
@@ -250,7 +286,14 @@ public class PrettyPrintVisitor implements Visitor {
     n.e2.accept(this);
     System.out.print(")");
   }
-
+  // Exp e1,e2;
+  public void visit(Divide n) {
+    System.out.print("(");
+    n.e1.accept(this);
+    System.out.print(" / ");
+    n.e2.accept(this);
+    System.out.print(")");
+  }
   // Exp e1,e2;
   public void visit(ArrayLookup n) {
     n.e1.accept(this);
@@ -279,11 +322,16 @@ public class PrettyPrintVisitor implements Visitor {
     }
     System.out.print(")");
   }
-
+ 
   // int i;
   public void visit(IntegerLiteral n) {
     System.out.print(n.i);
   }
+
+  public void visit(True n) {
+    System.out.print("true");
+  }
+
 
 
   // String s;
@@ -309,9 +357,123 @@ public class PrettyPrintVisitor implements Visitor {
     System.out.print("()");
   }
 
+  // Exp e;
+  public void visit(Not n) {
+    System.out.print("!");
+    n.e.accept(this);
+  }
 
   // String s;
   public void visit(Identifier n) {
     System.out.print(n.s);
   }
+
+
+  // Type t;
+  // Identifier i;
+  // FormalList fl;
+  // VarDeclList vl;
+  // StatementList sl;
+  // Exp e;
+  public void visit(MethodDeclarationFl n) {
+    System.out.print("  public ");
+    n.t.accept(this);
+    System.out.print(" ");
+    n.i.accept(this);
+    System.out.print(" (");
+    for ( int i = 0; i < n.fl.size(); i++ ) {
+        n.fl.get(i).accept(this);
+        if (i+1 < n.fl.size()) { System.out.print(", "); }
+    }
+    System.out.println(") { ");
+    for ( int i = 0; i < n.vl.size(); i++ ) {
+        System.out.print("    ");
+        n.vl.get(i).accept(this);
+        System.out.println("");
+    }
+    for ( int i = 0; i < n.sl.size(); i++ ) {
+        System.out.print("    ");
+        n.sl.get(i).accept(this);
+        if ( i < n.sl.size() ) { System.out.println(""); }
+    }
+    System.out.print("    return ");
+    n.e.accept(this);
+    System.out.println(";");
+    System.out.print("  }");
+  }
+
+  public void visit(MethodDeclaration n) {
+	    System.out.print("  public ");
+	    n.t.accept(this);
+	    System.out.print(" ");
+	    n.i.accept(this);
+	    System.out.print(" (");
+	    System.out.println(") { ");
+	    for ( int i = 0; i < n.vl.size(); i++ ) {
+	        System.out.print("    ");
+	        n.vl.get(i).accept(this);
+	        System.out.println("");
+	    }
+	    for ( int i = 0; i < n.sl.size(); i++ ) {
+	        System.out.print("    ");
+	        n.sl.get(i).accept(this);
+	        if ( i < n.sl.size() ) { System.out.println(""); }
+	    }
+	    System.out.print("    return ");
+	    n.e.accept(this);
+	    System.out.println(";");
+	    System.out.print("  }");
+	  }
+
+
+  public void visit(ClassDeclMethod n) {
+	    System.out.print("class ");
+	    n.i.accept(this);
+	    System.out.println(" { ");
+	    for ( int i = 0; i < n.ml.size(); i++ ) {
+	        System.out.println();
+	        n.ml.get(i).accept(this);
+	    }
+	    System.out.println();
+	    System.out.println("}");
+	  }
+
+  public void visit(MethodDeclSimple n) {
+		System.out.print("  public ");
+	    n.t.accept(this);
+	    System.out.print(" ");
+	    n.i.accept(this);
+	    System.out.print(" (");  
+	    System.out.println(") { ");
+	       System.out.print("    return ");
+	    n.e.accept(this);
+	    System.out.println(";");
+	    System.out.print("  }");
+		
+	}
+  
+  
+  public void visit(MethodDeclFlStatement n) {
+	    System.out.print("  public ");
+	    n.t.accept(this);
+	    System.out.print(" ");
+	    n.i.accept(this);
+	    System.out.print(" (");
+	    for ( int i = 0; i < n.fl.size(); i++ ) {
+	        n.fl.get(i).accept(this);
+	        if (i+1 < n.fl.size()) { System.out.print(", "); }
+	    }
+	    System.out.println(") { ");
+	    
+	    for ( int i = 0; i < n.sl.size(); i++ ) {
+	        System.out.print("    ");
+	        n.sl.get(i).accept(this);
+	        if ( i < n.sl.size() ) { System.out.println(""); }
+	    }
+	    System.out.print("    return ");
+	    n.e.accept(this);
+	    System.out.println(";");
+	    System.out.print("  }");
+	  }
+
 }

@@ -42,59 +42,223 @@ parser code {:
 /* Terminals (tokens returned by the scanner) */
 
 /* reserved words: */
-terminal DISPLAY;
+terminal DISPLAY,IMPORT, PUBLIC, PRIVATE, CLASS, NEW, NULL, VOID, STATIC, RETURN, MAIN, IF, ELSE, FOR, WHILE, THIS, INT, DOUBLE, BOOLEAN, STRING;
+terminal LENGTH, SYSTEMOUTPRINTLN, TRUE, FALSE, EXTENDS;
 
 /* operators: */
-terminal PLUS, BECOMES;
+terminal PLUS,  MINUS, BECOMES,TIMES, DIVIDE, LTHAN, MTHAN, AND, OR, NOT;
 
 /* delimiters: */
-terminal LPAREN, RPAREN, SEMICOLON;
+terminal LPAREN, RPAREN, DOT, SEMICOLON, OBRACKET, CBRACKET, OKEY, CKEY, COMMA;
 
 /* tokens with values: */
 terminal String IDENTIFIER;
 
+/* Numbers */
+terminal Integer NUMBERS;
+
 
 /* Nonterminals */
 
-nonterminal List<Statement> Program;
-nonterminal Statement Statement;
+nonterminal ArrayAssign ArrayAssignStatement;
 nonterminal Assign AssignStatement;
+nonterminal ClassDecl ClassDeclaration;
+nonterminal ClassDeclList ClassDeclList;
 nonterminal Display DisplayStatement;
 nonterminal Exp Expression;
+nonterminal ExpList ExpList;
+nonterminal Formal Formal;
+nonterminal FormalList FormalList;
 nonterminal Identifier Identifier;
+nonterminal IntegerLiteral IntegerLiteral;
+nonterminal List<Statement> Program;
+nonterminal MainClass MainClass;
+nonterminal MethodDecl MethodDecl;
+nonterminal MethodDeclList MethodDeclList;
+nonterminal Print PrintStatement;
+nonterminal Program Goal;
+nonterminal Statement Statement;
+nonterminal StatementList StatementList;
+nonterminal Type Type;
+nonterminal VarDecl VarDecl;
+nonterminal VarDeclList VarDeclList;
 
 
 /* Precedence declarations */
 
-precedence left PLUS;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence left AND, NOT;
+precedence left LTHAN;
+
+/* Productions */
+
 
 
 /* Productions */
 
-Program ::= Statement:s
-            {: List<Statement> p = new LinkedList<Statement>();
-               p.add(s);
-               RESULT = p; :}
-        | Program:p Statement:s
-            {: p.add(s); RESULT = p; :};
 
-Statement   ::= AssignStatement:s
-                {: RESULT = s; :}
-            | DisplayStatement:s
-                {: RESULT = s; :};
+           
+Goal ::= MainClass:m ClassDeclList:c
+		{: RESULT = new ProgramDeclaration(m,c,mleft); :}
+		| MainClass:m
+		{: RESULT = new ProgramDeclMain(m, mleft); :}
+		| ClassDeclList:c
+		{: RESULT = new ProgramDeclClassDeclList(c, cleft); :};
+
+MainClass ::= CLASS Identifier:id1 OKEY PUBLIC STATIC VOID MAIN LPAREN STRING OBRACKET CBRACKET Identifier:id2 RPAREN OKEY Statement:s CKEY CKEY
+			{:RESULT = new MainClassDeclaration(id1,id2,s,id1left); :};
+
+						
+ClassDeclaration ::= CLASS Identifier:id EXTENDS Identifier:id2 OKEY VarDeclList:vdl MethodDeclList:mdl CKEY
+				 {:RESULT = new ClassDeclExtends(id, id2, vdl, mdl, idleft); :}		 
+				 | CLASS Identifier:id OKEY VarDeclList:vdl MethodDeclList:mdl CKEY
+				 {: RESULT = new ClassDeclaration(id, vdl, mdl, idleft); :}
+				 | CLASS Identifier:id OKEY MethodDeclList:mdl CKEY
+				 {: RESULT = new ClassDeclMethod(id, mdl, idleft); :}
+				 | CLASS Identifier:id OKEY CKEY
+				 {: RESULT = new ClassDeclEmpty(id,idleft); :};
+				 
+ClassDeclList ::= ClassDeclaration:cd 
+				{: ClassDeclList cld = new ClassDeclList(cdleft);
+				  cld.add(cd);
+				  RESULT = cld; :}
+				| ClassDeclList:cld ClassDeclaration:cd
+				{: cld.add(cd);
+				  RESULT = cld; :};
+
+MethodDecl ::= PUBLIC Type:t Identifier:id  LPAREN FormalList:fl RPAREN OKEY VarDeclList:vd StatementList:sl RETURN Expression:ex SEMICOLON CKEY
+			{: RESULT = new MethodDeclarationFl(t, id, fl, vd, sl, ex, idleft); :}		
+			| PUBLIC Type:t Identifier:id  LPAREN RPAREN OKEY VarDeclList:vd StatementList:sl RETURN Expression:ex SEMICOLON CKEY
+			{: RESULT = new MethodDeclaration(t, id, vd, sl, ex, idleft); :}
+			| PUBLIC Type:t Identifier:id  LPAREN FormalList:fl RPAREN OKEY StatementList:sl RETURN Expression:ex SEMICOLON CKEY
+			{: RESULT = new MethodDeclFlStatement(t, id, fl, sl,ex, idleft); :}
+			| PUBLIC Type:t Identifier:id  LPAREN RPAREN OKEY RETURN Expression:ex SEMICOLON CKEY
+			{: RESULT = new MethodDeclSimple(t, id, ex, idleft); :};
+
+MethodDeclList ::= MethodDecl:md
+           	{: MethodDeclList mdl = new MethodDeclList(mdleft);
+              mdl.add(md);
+              RESULT = mdl; :}
+      	  	| MethodDeclList:mdl MethodDecl:m
+          	{: mdl.add(m); 
+          	  RESULT = mdl; :};              	
+          	
+VarDecl ::= Type:t Identifier:id SEMICOLON
+		{: RESULT = new VarDecl(t,id, idleft); :};
+				
+VarDeclList ::= VarDecl:s
+			{: VarDeclList vdl = new VarDeclList(sleft);
+            vdl.add(s);
+            RESULT = vdl; :}
+			| VarDeclList:p VarDecl:s
+           	{: p.add(s);
+           	 RESULT = p; :};
+
+Formal ::= Type:t Identifier:id
+			{:RESULT = new Formal(t,id, idleft); :};
+
+FormalList ::= Formal:f
+			{: FormalList fl = new FormalList(fleft); 
+			fl.add(f);
+			RESULT = fl; :}
+			| FormalList:fl COMMA Formal:f
+			{: fl.add(f);
+			RESULT = fl; :};
+			
+Type ::= INT:i OBRACKET CBRACKET
+		{: RESULT = new IntArrayType(ileft); :}
+		| BOOLEAN:b
+		{: RESULT = new BooleanType(bleft); :}
+		| INT:i 
+		{: RESULT = new IntegerType(ileft); :}
+		| IDENTIFIER:id
+		{: RESULT = new IdentifierType(id.toString(),idleft); :}
+		;
+		
+StatementList ::= Statement:s
+           	{: StatementList sl = new StatementList(sleft);
+            sl.add(s);
+            RESULT = sl; :}
+      	  	| StatementList:p Statement:s
+          	{: p.add(s); 
+          	RESULT = p; :};
+          			
+Statement   ::=  AssignStatement:s
+	                {: RESULT = s; :}
+	            | DisplayStatement:s
+	                {: RESULT = s; :}
+	            | PrintStatement: s
+	            	{: RESULT = s; :}
+	            | IF LPAREN Expression:expr RPAREN  Statement:s ELSE  Statement:s1 
+	            	{: RESULT = new If(expr, s, s1, exprleft); :}	
+	            | WHILE LPAREN Expression:expr RPAREN OKEY Statement:s CKEY
+	            	{: RESULT = new While(expr, s, exprleft); :}
+	            | ArrayAssignStatement:as
+	            	{: RESULT = as; :}
+	            | OKEY StatementList:sl CKEY
+					{: for(int i=0; i<sl.size(); i++) { 
+					RESULT = sl.get(i); }:};		
+			
+
 
 AssignStatement ::= Identifier:id BECOMES Expression:expr SEMICOLON
                     {: RESULT = new Assign(id, expr, idleft); :};
+                
 
 Identifier  ::= IDENTIFIER:id
                 {: RESULT = new Identifier(id, idleft); :};
 
-DisplayStatement ::= DISPLAY:d Expression:expr SEMICOLON
-                     {: RESULT = new Display(expr, dleft); :};
 
+PrintStatement ::= SYSTEMOUTPRINTLN:p Expression:expr SEMICOLON
+					{: RESULT = new Print(expr, exprleft); :};
+                 
+IntegerLiteral ::= NUMBERS:n 
+				{:RESULT = new IntegerLiteral(n, nleft); :};
+		
 Expression    ::= IDENTIFIER:name
             {: RESULT = new IdentifierExp(name, nameleft); :}
-        | Expression:arg1 PLUS Expression:arg2
-            {: RESULT = new Plus(arg1, arg2, arg1left); :}
-        | LPAREN Expression:expr RPAREN
-            {: RESULT = expr; :};
+		        | NUMBERS:n
+		        			{:RESULT = new IntegerLiteral(n, nleft); :}
+		        | Expression:arg1 PLUS Expression:arg2
+		            		{: RESULT = new Plus(arg1, arg2, arg1left); :}
+		        | Expression:arg1 MINUS Expression:arg2
+		            		{: RESULT = new Minus(arg1, arg2, arg1left); :}
+		        | Expression:arg1 TIMES Expression:arg2
+		            		{: RESULT = new Times(arg1, arg2, arg1left); :}
+		        | Expression:arg1 DIVIDE Expression:arg2
+		            		{: RESULT = new Divide(arg1, arg2, arg1left); :}
+		        | LPAREN Expression:expr RPAREN
+		           			 {: RESULT = expr; :}
+		        | Expression:exp DOT LENGTH
+		       				{: RESULT = new ArrayLength(exp, expleft); :}
+		       | TRUE:t
+		       				{: RESULT = new True(tleft); :}
+		       | THIS:th
+		            		{: RESULT = new This(thleft); :}
+		       | NOT:no Expression:expr
+		            		{: RESULT = new Not(expr,noleft); :}
+		       | Expression:e1 AND Expression:e2
+		       				{: RESULT = new And(e1,e2,e1left); :}   		
+		       | NEW INT OBRACKET Expression:expr CBRACKET
+		            		{: RESULT = new NewArray(expr, exprleft); :}
+		       | NEW Identifier:id LPAREN RPAREN 
+		            		{: RESULT = new NewObject(id, idleft); :}
+		       | Expression:e1 LTHAN Expression:e2
+		       				{: RESULT = new LessThan(e1,e2,e1left); :}
+		       | Expression:expr DOT Identifier:id LPAREN ExpList:exprlist RPAREN
+		                    {: RESULT = new Call(expr, id , exprlist,exprleft); :}            
+			   | Expression: expr OBRACKET Expression:e2 CBRACKET
+			       			{: RESULT = new ArrayLookup(expr, e2, exprleft); :};
+       		
+ExpList ::= Expression:s
+				{: ExpList el = new ExpList(sleft);
+				el.add(s);
+				RESULT = el; :}	
+				| ExpList:el COMMA Expression:e 
+          		{: el.add(e); 
+          		RESULT = el; :};
+		      
+ArrayAssignStatement ::= Identifier:id OBRACKET Expression:expr1 CBRACKET BECOMES Expression:expr2 SEMICOLON
+						{: RESULT = new ArrayAssign(id, expr1, expr2, idleft); :};		      
+
